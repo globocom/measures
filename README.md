@@ -2,16 +2,18 @@
 
 A python library to send application metrics using UDP.
 
+https://travis-ci.org/globocom/measure.svg?branch=master
+
 ### How do I get set up? ###
 
 * Summary of set up
 	
-	mkvirtualenv measure
-	pip install -r test_requirements.txt
+	`mkvirtualenv measure`
+	`pip install -r test_requirements.txt`
 
 * How to run tests
 
-	make tests
+	`make tests`
 
 ### Contribution guidelines ###
 
