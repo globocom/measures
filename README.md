@@ -2,7 +2,7 @@
 
 A python library to send application metrics using UDP.
 
-![Travis CI](https://travis-ci.org/globocom/measure.svg?branch=master)
+[![Build Status](https://travis-ci.org/globocom/measure.svg?branch=master)](https://travis-ci.org/globocom/measure)
 
 ### How do I get set up? ###
 
