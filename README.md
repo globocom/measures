@@ -11,6 +11,12 @@ A python library to send application metrics using UDP.
 	`mkvirtualenv measure`
 	`pip install -r test_requirements.txt`
 
+* Usage
+
+	`from measure import Measure`
+	`measure = Measure('myclient', ('localhost', 1984))`
+	`measure.count('mymetric', dimensions={'name': 'john'})`
+
 * How to run tests
 
 	`make tests`
