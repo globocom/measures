@@ -3,7 +3,7 @@ omit =
     test_*
 branch = True
 source =
-    src/
+    measures/
 
 [report]
 exclude_lines =
