@@ -1,7 +1,7 @@
 # -*- coding: utf8 -*-
 
 from unittest import TestCase
-from measures.measures import Measure
+from measures import Measure
 from mock import patch
 import json
 import socket
@@ -87,7 +87,7 @@ class MeasureTestCase(TestCase):
             self.fail('socket.error raised from count')
 
     @patch('socket.socket.sendto', side_effect=socket.error(80, 'error'))
-    @patch('measures.measures.logger.error')
+    @patch('measures.logger.error')
     def test_must_log_socket_error(self, mock_warn, mock_sendto):
         self.measure.count('mymetric')
         mock_warn.assert_called_once_with('Error on sendto. [Errno 80]')

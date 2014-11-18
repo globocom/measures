@@ -1,5 +1,5 @@
 from ..acceptance import UDPServerTestCase
-from measures.measures import Measure
+from measures import Measure
 from multiprocessing import Process
 import json
 import time

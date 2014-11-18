@@ -1,4 +1,4 @@
-from setuptools import setup
+from distutils.core import setup
 
 
 setup(name="measures",
@@ -9,7 +9,8 @@ setup(name="measures",
       url = "http://github.com/globocom/measure",
       download_url = '',
       license="MIT",
-      packages=['measures'],
+      packages=[''],
+      package_dir={'': 'src'},
       classifiers=[
           'Development Status :: 5 - Production/Stable',
           'Environment :: Web Environment',
