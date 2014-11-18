@@ -76,3 +76,16 @@ class MeasureTestCase(TestCase):
         dimensions = {}
         self.measure.count('mymetric', dimensions=dimensions)
         self.assertFalse(dimensions)
+
+    @patch('socket.socket.sendto', side_effect=socket.error)
+    def test_must_not_throw_socket_exception(self, mock_sendto):
+        try:
+            self.measure.count('mymetric')
+        except socket.error:
+            self.fail('socket.error raised from count')
+
+    @patch('socket.socket.sendto', side_effect=socket.error(80, 'error'))
+    @patch('measure.logger.error')
+    def test_must_log_socket_error(self, mock_warn, mock_sendto):
+        self.measure.count('mymetric')
+        mock_warn.assert_called_once_with('Error on sendto. [Errno 80]')
