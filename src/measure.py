@@ -13,6 +13,7 @@ class Measure(object):
         self.client = client
         self.address = address
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.socket.setblocking(0)
 
     def count(self, metric, counter=1, dimensions={}):
         message = {

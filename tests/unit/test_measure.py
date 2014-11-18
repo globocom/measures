@@ -17,6 +17,8 @@ class MeasureTestCase(TestCase):
         self.assertEqual(measure.client, 'myclient')
         self.assertEqual(measure.address, ('localhost', 1984))
         self.assertEqual(measure.socket.type, socket.SOCK_DGRAM)
+        # socket is non-blocking
+        self.assertEqual(measure.socket.gettimeout(), 0.0)
 
     @patch('socket.socket.sendto')
     def test_must_send_a_packet_to_correct_address(self, mock_sendto):
