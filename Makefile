@@ -1,4 +1,4 @@
-.PHONY: deps-test clean unit acceptance tests
+.PHONY: deps-test clean unit acceptance tests upload
 
 deps-test:
 	@pip install -r test_requirements.txt
@@ -22,3 +22,6 @@ acceptance: clean deps-test
 
 tests: deps-test
 	nosetests -s --cover-branches --cover-erase --with-coverage --cover-inclusive --cover-package=measure --with-xunit
+
+upload:
+	@python ./setup.py sdist upload -r pypi
