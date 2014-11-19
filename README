@@ -16,7 +16,7 @@ How do I get set up?
 	mkvirtualenv measure
 	pip install -r test_requirements.txt
 
-* Usage
+Usage
 
 .. code-block:: python
 	from measure import Measure

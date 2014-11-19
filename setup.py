@@ -1,13 +1,18 @@
 from distutils.core import setup
 
 
+with open('README.md') as f:
+    README = f.read()
+
+
 setup(name="measures",
       version="1.0.7",
       description=u"Library for posting metrics to a server",
+      long_description=README,
       author="Globo.com",
       author_email="busca@corp.globo.com",
-      url = "http://github.com/globocom/measure",
-      download_url = '',
+      url="http://github.com/globocom/measure",
+      download_url='',
       license="MIT",
       packages=[''],
       package_dir={'': 'src'},
