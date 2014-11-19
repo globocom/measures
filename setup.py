@@ -2,7 +2,7 @@ from distutils.core import setup
 
 
 setup(name="measures",
-      version="1.0.2",
+      version="1.0.7",
       description=u"Library for posting metrics to a server",
       author="Globo.com",
       author_email="busca@corp.globo.com",
