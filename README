@@ -13,12 +13,14 @@ How do I get set up?
 * Summary of set up
 	
 .. code-block:: bash
+
 	mkvirtualenv measure
 	pip install -r test_requirements.txt
 
-Usage
+* Usage
 
 .. code-block:: python
+
 	from measure import Measure
 	measure = Measure('myclient', ('localhost', 1984))
 	measure.count('mymetric', dimensions={'name': 'john'})
@@ -26,6 +28,7 @@ Usage
 * How to run tests
 
 .. code-block:: bash
+
 	make tests
 
 Contribution guidelines
