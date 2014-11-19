@@ -21,9 +21,9 @@ Using
 
 .. code-block:: python
 
-	from measures import Measure
-	measure = Measure('myclient', ('localhost', 1984))
-	measure.count('mymetric', dimensions={'name': 'john'})
+    from measures import Measure
+    measure = Measure('myclient', ('localhost', 1984))
+    measure.count('mymetric', dimensions={'name': 'john'})
 
 
 Contributing
@@ -35,14 +35,14 @@ Contributing
 
     git clone https://github.com/globocom/measures.git
     cd measures
-	mkvirtualenv measures
-	pip install -r test_requirements.txt
+    mkvirtualenv measures
+    pip install -r test_requirements.txt
 
 * Run the tests
 
 .. code-block:: bash
 
-	make tests
+    make tests
 
 * Write tests for your new feature or bug fix
 * Write needed code changes
