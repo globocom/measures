@@ -6,7 +6,7 @@ with open('README') as f:
 
 
 setup(name="measures",
-      version="1.0.8",
+      version="1.0.9",
       description=u"Library for posting metrics to a server",
       long_description=README,
       author="Globo.com",
