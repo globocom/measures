@@ -21,7 +21,10 @@ acceptance: clean deps-test
 	@nosetests -vv --with-yanc -s tests/acceptance/
 
 tests: deps-test
-	nosetests -s --cover-branches --cover-erase --with-coverage --cover-inclusive --cover-package=src --with-xunit
+	nosetests -s --cover-branches --cover-erase --with-coverage --cover-inclusive --cover-package=src --with-xunit --with-yanc
+
+focus: deps-test
+	nosetests -s --cover-branches --cover-erase --with-coverage --cover-inclusive --cover-package=src --with-xunit --with-yanc --with-focus
 
 upload:
 	@python ./setup.py sdist upload -r pypi
