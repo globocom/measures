@@ -8,22 +8,33 @@ A python library to send application metrics using UDP.
    :alt: Build Status
 
 
-Using
------
-
-* Installing
+Installation
+------------
 
 .. code-block:: bash
 
     pip install measures
 
-* Usage
+
+Usage
+-----
+
+* count
 
 .. code-block:: python
 
     from measures import Measure
     measure = Measure('myclient', ('localhost', 1984))
     measure.count('mymetric', dimensions={'name': 'john'})
+
+* time
+
+.. code-block:: python
+
+    from measures import Measure
+    measure = Measure('myclient', ('localhost', 1984))
+    with measure.time('mymetric') as dimensions:
+        dimensions['name'] = 'john'
 
 
 Contributing
