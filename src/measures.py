@@ -30,9 +30,9 @@ class _TimeContext(object):
             'error_type': str(exc_type or ''),
             'error_value': str(exc_value or ''),
         }
-        message = dict(self.dimensions.items() + message.items())
+        self.dimensions.update(message)
         try:
-            self.socket.sendto(json.dumps(message), self.address)
+            self.socket.sendto(json.dumps(self.dimensions), self.address)
         except socket.error as serr:
             logger.error('Error on sendto. [Errno {}]'.format(serr.errno))
 
@@ -46,14 +46,15 @@ class Measure(object):
         self.socket.setblocking(0)
         self.time = functools.partial(_TimeContext, self.socket, client, address)
 
-    def count(self, metric, counter=1, dimensions={}):
+    def count(self, metric, counter=1, dimensions=None):
         message = {
             'client': self.client,
             'metric': metric,
             'count': counter,
         }
-        message = dict(dimensions.items() + message.items())
+        dimensions = dimensions or {}
+        dimensions.update(message)
         try:
-            self.socket.sendto(json.dumps(message), self.address)
+            self.socket.sendto(json.dumps(dimensions), self.address)
         except socket.error as serr:
             logger.error('Error on sendto. [Errno {}]'.format(serr.errno))
