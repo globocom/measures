@@ -27,21 +27,34 @@ Usage
     measure = Measure('myclient', ('localhost', 1984))
     measure.count('mymetric', dimensions={'name': 'john'})
 
-* time
+* time (measure time spent on a given block)
 
 .. code-block:: python
 
+    import time
+    from measures import Measure
+    measure = Measure('myclient', ('localhost', 1984))
+    with measure.time('mymetric'):
+        # do some slow operation:
+        time.sleep(3.14159)
+
+.. code-block:: python
+
+    import time
     from measures import Measure
     measure = Measure('myclient', ('localhost', 1984))
     with measure.time('mymetric') as dimensions:
-        dimensions['name'] = 'john'
+        # do some slow operation:
+        time.sleep(1.61803)
+        # add any relevant information, if necessary:
+        dimensions['relevant_info'] = 'pertinent_info'
 
 
 Contributing
 ------------
 
 * Set up your environment
-	
+
 .. code-block:: bash
 
     git clone https://github.com/globocom/measures.git
