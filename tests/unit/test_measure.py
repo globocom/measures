@@ -1,4 +1,4 @@
-# -*- coding: utf8 -*-
+# -*- coding: utf-8 -*-
 
 from unittest import TestCase
 from measures import Measure
@@ -13,7 +13,9 @@ class MeasureTestCase(TestCase):
         measure = Measure('myclient', ('localhost', 1984))
         self.assertEqual(measure.client, 'myclient')
         self.assertEqual(measure.address, ('localhost', 1984))
-        self.assertEqual(measure.socket.type, socket.SOCK_DGRAM)
+        self.assertEqual(
+            measure.socket.getsockopt(socket.SOL_SOCKET, socket.SO_TYPE),
+            socket.SOCK_DGRAM)
         # socket is non-blocking
         self.assertEqual(measure.socket.gettimeout(), 0.0)
 
@@ -39,7 +41,7 @@ class MeasureCountTestCase(BaseMeasureTestCase):
         self.assertEqual(mock_sendto.call_count, 1)
 
         expected_message = {'client': 'myclient', 'metric': 'mymetric', 'count': 1}
-        message = json.loads(mock_sendto.call_args[0][0])
+        message = json.loads(mock_sendto.call_args[0][0].decode('utf-8'))
         self.assertDictEqual(message, expected_message)
 
     @patch('socket.socket.sendto')
@@ -49,7 +51,7 @@ class MeasureCountTestCase(BaseMeasureTestCase):
         self.assertEqual(mock_sendto.call_count, 1)
 
         expected_message = {'client': 'myclient', 'metric': 'mymetric', 'count': 10}
-        message = json.loads(mock_sendto.call_args[0][0])
+        message = json.loads(mock_sendto.call_args[0][0].decode('utf-8'))
         self.assertDictEqual(message, expected_message)
 
     @patch('socket.socket.sendto')
@@ -63,7 +65,7 @@ class MeasureCountTestCase(BaseMeasureTestCase):
             'count': 1,
             'name': 'john',
         }
-        message = json.loads(mock_sendto.call_args[0][0])
+        message = json.loads(mock_sendto.call_args[0][0].decode('utf-8'))
         self.assertDictEqual(message, expected_message)
 
     @patch('socket.socket.sendto')
@@ -76,7 +78,7 @@ class MeasureCountTestCase(BaseMeasureTestCase):
             'metric': 'mymetric',
             'count': 1,
         }
-        message = json.loads(mock_sendto.call_args[0][0])
+        message = json.loads(mock_sendto.call_args[0][0].decode('utf-8'))
         self.assertDictEqual(message, expected_message)
 
     @patch('socket.socket.sendto')
@@ -115,7 +117,7 @@ class MeasureTimeTestCase(BaseMeasureTestCase):
             pass
 
         self.assertEqual(mock_sendto.call_count, 1)
-        message = json.loads(mock_sendto.call_args[0][0])
+        message = json.loads(mock_sendto.call_args[0][0].decode('utf-8'))
         self.assertEqual(len(message), 5)
         self.assertIn('client', message)
         self.assertEqual(message['client'], 'myclient')
@@ -135,7 +137,7 @@ class MeasureTimeTestCase(BaseMeasureTestCase):
             dimensions['name'] = 'john'
 
         self.assertEqual(mock_sendto.call_count, 1)
-        message = json.loads(mock_sendto.call_args[0][0])
+        message = json.loads(mock_sendto.call_args[0][0].decode('utf-8'))
         self.assertEqual(len(message), 6)
         self.assertIn('client', message)
         self.assertEqual(message['client'], 'myclient')
@@ -161,7 +163,7 @@ class MeasureTimeTestCase(BaseMeasureTestCase):
             dimensions['error_value'] = 'othervalue'
 
         self.assertEqual(mock_sendto.call_count, 1)
-        message = json.loads(mock_sendto.call_args[0][0])
+        message = json.loads(mock_sendto.call_args[0][0].decode('utf-8'))
         self.assertEqual(len(message), 5)
         self.assertIn('client', message)
         self.assertEqual(message['client'], 'myclient')
@@ -203,7 +205,7 @@ class MeasureTimeTestCase(BaseMeasureTestCase):
                 raise ValueError('foo')
 
         self.assertEqual(mock_sendto.call_count, 1)
-        message = json.loads(mock_sendto.call_args[0][0])
+        message = json.loads(mock_sendto.call_args[0][0].decode('utf-8'))
         self.assertEqual(len(message), 5)
         self.assertIn('client', message)
         self.assertEqual(message['client'], 'myclient')
@@ -225,6 +227,6 @@ class MeasureTimeTestCase(BaseMeasureTestCase):
                 raise ValueError('foo')
 
         self.assertEqual(mock_sendto.call_count, 1)
-        message = json.loads(mock_sendto.call_args[0][0])
+        message = json.loads(mock_sendto.call_args[0][0].decode('utf-8'))
         self.assertIn('name', message)
         self.assertEqual(message['name'], 'john')

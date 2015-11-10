@@ -16,7 +16,7 @@ class MeasureTestCase(UDPServerTestCase):
         self.wait_for(lambda: len(self.messages))
         self.assertEqual(len(self.messages), 1)
 
-        message = json.loads(self.messages[0])
+        message = json.loads(self.messages[0].decode('utf-8'))
         expected_message = {
             'client': 'myclient',
             'metric': 'mymetric',
@@ -27,16 +27,19 @@ class MeasureTestCase(UDPServerTestCase):
     def test_recieve_time_message_correctly_over_network(self):
         with self.measure.time('mymetric'):
             pass
-        self.wait_for(lambda: len(self.messages))
-        self.assertEqual(len(self.messages), 1)
 
-        message = json.loads(self.messages[0])
+        while True:
+            self.wait_for(lambda: len(self.messages))
+            message = json.loads(self.messages.pop().decode('utf-8'))
+
+            if 'time' in message:
+                break
+
+        self.assertIsInstance(message['time'], float)
         self.assertIn('client', message)
         self.assertEqual(message['client'], 'myclient')
         self.assertIn('metric', message)
         self.assertEqual(message['metric'], 'mymetric')
-        self.assertIn('time', message)
-        self.assertIsInstance(message['time'], float)
         self.assertGreater(message['time'], 0)
         self.assertIn('error_type', message)
         self.assertEqual(message['error_type'], '')
