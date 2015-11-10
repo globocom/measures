@@ -1,4 +1,9 @@
-from SocketServer import ThreadingMixIn, UDPServer
+try:
+    from SocketServer import ThreadingMixIn, UDPServer
+except ImportError:
+    # PY3
+    from socketserver import ThreadingMixIn, UDPServer
+
 from unittest import TestCase
 from threading import Thread
 from contextlib import contextmanager
