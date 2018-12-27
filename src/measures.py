@@ -31,7 +31,7 @@ class _TimeContext(object):
             'error_value': str(exc_value or ''),
         }
         self.dimensions.update(message)
-        buf = json.dumps(self.dimensions).encode('utf-8')
+        buf = json.dumps(self.dimensions, sort_keys=True).encode('utf-8')
 
         try:
             self.socket.sendto(buf, self.address)
@@ -56,7 +56,7 @@ class Measure(object):
         }
         dimensions = dimensions or {}
         dimensions.update(message)
-        buf = json.dumps(dimensions).encode('utf-8')
+        buf = json.dumps(dimensions, sort_keys=True).encode('utf-8')
 
         try:
             self.socket.sendto(buf, self.address)
