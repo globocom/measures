@@ -6,6 +6,7 @@ from mock import patch
 import json
 import socket
 
+from nose_focus import focus
 
 class MeasureTestCase(TestCase):
 
@@ -98,7 +99,7 @@ class MeasureCountTestCase(BaseMeasureTestCase):
     @patch('measures.logger.error')
     def test_must_log_socket_error(self, mock_warn, mock_sendto):
         self.measure.count('mymetric')
-        mock_warn.assert_called_once_with('Error on sendto. [Errno 80]')
+        mock_warn.assert_called_once_with('Error on sendto. [Errno 80 - error]')
 
 
 class MeasureTimeTestCase(BaseMeasureTestCase):
@@ -196,7 +197,7 @@ class MeasureTimeTestCase(BaseMeasureTestCase):
     def test_must_log_socket_error(self, mock_warn, mock_sendto):
         with self.measure.time('mymetric'):
             pass
-        mock_warn.assert_called_once_with('Error on sendto. [Errno 80]')
+        mock_warn.assert_called_once_with('Error on sendto. [Errno 80 - error]')
 
     @patch('socket.socket.sendto')
     def test_must_send_packet_with_time_spent_on_error(self, mock_sendto):
@@ -228,5 +229,67 @@ class MeasureTimeTestCase(BaseMeasureTestCase):
 
         self.assertEqual(mock_sendto.call_count, 1)
         message = json.loads(mock_sendto.call_args[0][0].decode('utf-8'))
+        self.assertIn('name', message)
+        self.assertEqual(message['name'], 'john')
+
+
+class MeasureSendTestCase(BaseMeasureTestCase):
+
+    @patch('socket.socket.sendto')
+    def test_must_send_a_packet_to_correct_address(self, mock_sendto):
+        self.measure.send('mymetric', None)
+
+        self.assertEqual(mock_sendto.call_count, 1)
+        self.assertEqual(mock_sendto.call_args[0][1], ('localhost', 1984))
+
+    @patch('socket.socket.sendto')
+    def test_must_send_packet_with_dimensions(self, mock_sendto):
+        d = {
+            'count': 1,
+            'name': 'john'
+        }
+        self.measure.send('mymetric', d)
+
+        self.assertEqual(mock_sendto.call_count, 1)
+        message = json.loads(mock_sendto.call_args[0][0].decode('utf-8'))
+
+        self.assertEqual(len(message), 4)
+        self.assertIn('client', message)
+        self.assertEqual(message['client'], 'myclient')
+        self.assertIn('metric', message)
+        self.assertEqual(message['metric'], 'mymetric')
+        self.assertIn('count', message)
+        self.assertIsInstance(message['count'], int)
+        self.assertEqual(message['count'], 1)
+        self.assertIn('name', message)
+        self.assertEqual(message['name'], 'john')
+
+    @patch('socket.socket.sendto', side_effect=socket.error(80, 'error'))
+    @patch('measures.logger.error')
+    def test_must_log_socket_error(self, mock_warn, mock_sendto):
+        self.measure.send('mymetric', None)
+        mock_warn.assert_called_once_with('Error on sendto. [Errno 80 - error]')
+
+    @patch('socket.socket.sendto')
+    def test_dimensions_must_not_override_parameters(self, mock_sendto):
+        d = {
+            'client': 'otherclient',
+            'metric': 'othermetric',
+            'time': 1.1,
+            'name': 'john'
+        }
+        self.measure.send('mymetric', d)
+
+        self.assertEqual(mock_sendto.call_count, 1)
+        message = json.loads(mock_sendto.call_args[0][0].decode('utf-8'))
+
+        self.assertEqual(len(message), 4)
+        self.assertIn('client', message)
+        self.assertEqual(message['client'], 'myclient')
+        self.assertIn('metric', message)
+        self.assertEqual(message['metric'], 'mymetric')
+        self.assertIn('time', message)
+        self.assertIsInstance(message['time'], float)
+        self.assertEqual(message['time'], 1.1)
         self.assertIn('name', message)
         self.assertEqual(message['name'], 'john')
