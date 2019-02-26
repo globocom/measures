@@ -1,6 +1,12 @@
 Releases
 ========
 
+1.3.0 - Feb 26, 2019
+---------------------
+
+- Added support for sending generic metrics
+- Changes on README
+
 1.2.0 - Mar 14, 2016
 ---------------------
 
