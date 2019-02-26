@@ -31,12 +31,7 @@ class _TimeContext(object):
             'error_value': str(exc_value or ''),
         }
         self.dimensions.update(message)
-        buf = json.dumps(self.dimensions).encode('utf-8')
-
-        try:
-            self.socket.sendto(buf, self.address)
-        except socket.error as serr:
-            logger.error('Error on sendto. [Errno {}]'.format(serr.errno))
+        send_to(self.socket, self.address, self.dimensions)
 
 
 class Measure(object):
@@ -56,9 +51,22 @@ class Measure(object):
         }
         dimensions = dimensions or {}
         dimensions.update(message)
-        buf = json.dumps(dimensions).encode('utf-8')
+        send_to(self.socket, self.address, dimensions)
 
-        try:
-            self.socket.sendto(buf, self.address)
-        except socket.error as serr:
-            logger.error('Error on sendto. [Errno {}]'.format(serr.errno))
+    def send(self, metric, dimensions):
+        message = {
+            'metric': metric,
+            'client': self.client,
+        }
+        dimensions = dimensions or {}
+        dimensions.update(message)
+        send_to(self.socket, self.address, dimensions)
+
+
+def send_to(socket_obj, address, dimensions):
+    buf = json.dumps(dimensions).encode('utf-8')
+    try:
+        socket_obj.sendto(buf, address)
+    except socket.error as serr:
+        logger.error('Error on sendto. [Errno {} - {}]'.format(serr.errno, serr.strerror))
+
