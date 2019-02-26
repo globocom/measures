@@ -50,6 +50,19 @@ Usage
         dimensions['relevant_info'] = 'pertinent_info'
 
 
+* send
+
+.. code-block:: python
+
+    from measures import Measure
+    measure = Measure('myclient', ('localhost', 1984))
+    dimensions = {
+        'time': 10.1,
+        'relevant_info': pertinent_info
+    }
+    measure.send('mymetric', dimensions)
+
+
 Contributing
 ------------
 
