@@ -13,7 +13,7 @@ class MeasureTestCase(TestCase):
     def test_must_create_a_measure_object_with_correct_attributes(self):
         measure = Measure('myclient', ('localhost', 1984))
         self.assertEqual(measure.client, 'myclient')
-        self.assertEqual(measure.address, ('localhost', 1984))
+        self.assertEqual(measure.addresses, [('localhost', 1984)])
         self.assertEqual(
             measure.socket.getsockopt(socket.SOL_SOCKET, socket.SO_TYPE),
             socket.SOCK_DGRAM)
