@@ -10,10 +10,10 @@ logger = logging.getLogger(__name__)
 
 class _TimeContext(object):
 
-    def __init__(self, socket, client, address, metric):
+    def __init__(self, socket, client, addresses, metric):
         self.socket = socket
         self.client = client
-        self.address = address
+        self.addresses = addresses if isinstance(addresses, list) else [addresses]
         self.metric = metric
         self.dimensions = {}
 
@@ -31,17 +31,17 @@ class _TimeContext(object):
             'error_value': str(exc_value or ''),
         }
         self.dimensions.update(message)
-        send_to(self.socket, self.address, self.dimensions)
+        send_to(self.socket, self.addresses, self.dimensions)
 
 
 class Measure(object):
 
-    def __init__(self, client, address):
+    def __init__(self, client, addresses):
         self.client = client
-        self.address = address
+        self.addresses = addresses if isinstance(addresses, list) else [addresses]
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.socket.setblocking(0)
-        self.time = functools.partial(_TimeContext, self.socket, client, address)
+        self.time = functools.partial(_TimeContext, self.socket, client, addresses)
 
     def count(self, metric, counter=1, dimensions=None):
         message = {
@@ -51,7 +51,7 @@ class Measure(object):
         }
         dimensions = dimensions or {}
         dimensions.update(message)
-        send_to(self.socket, self.address, dimensions)
+        send_to(self.socket, self.addresses, dimensions)
 
     def send(self, metric, dimensions):
         message = {
@@ -60,13 +60,14 @@ class Measure(object):
         }
         dimensions = dimensions or {}
         dimensions.update(message)
-        send_to(self.socket, self.address, dimensions)
+        send_to(self.socket, self.addresses, dimensions)
 
 
-def send_to(socket_obj, address, dimensions):
+def send_to(socket_obj, addresses, dimensions):
     buf = json.dumps(dimensions).encode('utf-8')
     try:
-        socket_obj.sendto(buf, address)
+        for address in addresses:
+            socket_obj.sendto(buf, address)
     except socket.error as serr:
         logger.error('Error on sendto. [Errno {} - {}]'.format(serr.errno, serr.strerror))
 
