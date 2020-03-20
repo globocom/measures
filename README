@@ -62,6 +62,16 @@ Usage
     }
     measure.send('mymetric', dimensions)
 
+* multiple destinations
+
+Metrics can be sent to more than one backend
+
+.. code-block:: python
+
+    from measures import Measure
+
+    measure = Measure('myclient', [('backend.host.1', 1984), ('backend.host.2', 1984)]
+
 
 Contributing
 ------------

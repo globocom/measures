@@ -1,6 +1,11 @@
 Releases
 ========
 
+1.4.0 - Mar 19, 2020
+--------------------
+
+- Support multiple backends for persisting metrics
+
 1.3.0 - Feb 26, 2019
 ---------------------
 
