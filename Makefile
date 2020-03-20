@@ -28,3 +28,6 @@ focus: deps-test
 
 upload:
 	@python ./setup.py sdist upload -r pypi
+
+upload-local:
+	@python ./setup.py sdist upload -r pypi-local
