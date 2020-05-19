@@ -36,11 +36,11 @@ class _TimeContext(object):
 
 class Measure(object):
 
-    def __init__(self, client, addresses):
+    def __init__(self, client, addresses, socket_block_timeout=0):
         self.client = client
         self.addresses = addresses if isinstance(addresses, list) else [addresses]
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.socket.setblocking(0)
+        self.socket.settimeout(socket_block_timeout)
         self.time = functools.partial(_TimeContext, self.socket, client, addresses)
 
     def count(self, metric, counter=1, dimensions=None):
