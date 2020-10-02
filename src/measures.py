@@ -21,14 +21,14 @@ class _TimeContext(object):
         self.start_time = time.time()
         return self.dimensions
 
-    def __exit__(self, exc_type, exc_value, exc_traceback):
+    def __exit__(self, exc_type='', exc_value=''):
         spent = time.time() - self.start_time
         message = {
             'client': self.client,
             'metric': self.metric,
             'time': spent,
-            'error_type': str(exc_type or ''),
-            'error_value': str(exc_value or ''),
+            'error_type': str(exc_type),
+            'error_value': str(exc_value),
         }
         self.dimensions.update(message)
         send_to(self.socket, self.addresses, self.dimensions)
@@ -43,22 +43,20 @@ class Measure(object):
         self.socket.setblocking(0)
         self.time = functools.partial(_TimeContext, self.socket, client, addresses)
 
-    def count(self, metric, counter=1, dimensions=None):
+    def count(self, metric, counter=1, dimensions={}):
         message = {
             'client': self.client,
             'metric': metric,
             'count': counter,
         }
-        dimensions = dimensions or {}
         dimensions.update(message)
         send_to(self.socket, self.addresses, dimensions)
 
-    def send(self, metric, dimensions):
+    def send(self, metric, dimensions={}):
         message = {
             'metric': metric,
             'client': self.client,
         }
-        dimensions = dimensions or {}
         dimensions.update(message)
         send_to(self.socket, self.addresses, dimensions)
 
@@ -70,4 +68,3 @@ def send_to(socket_obj, addresses, dimensions):
             socket_obj.sendto(buf, address)
     except socket.error as serr:
         logger.error('Error on sendto. [Errno {} - {}]'.format(serr.errno, serr.strerror))
-
