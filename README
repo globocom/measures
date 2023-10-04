@@ -3,11 +3,6 @@ README
 
 A python library to send application metrics using UDP.
 
-.. image:: https://travis-ci.org/globocom/measures.svg?branch=master
-   :target: https://travis-ci.org/globocom/measures
-   :alt: Build Status
-
-
 Installation
 ------------
 
