@@ -21,14 +21,14 @@ class _TimeContext(object):
         self.start_time = time.time()
         return self.dimensions
 
-    def __exit__(self, exc_type, exc_value, exc_traceback):
+    def __exit__(self, exc_type='', exc_value=''):
         spent = time.time() - self.start_time
         message = {
             'client': self.client,
             'metric': self.metric,
             'time': spent,
-            'error_type': str(exc_type or ''),
-            'error_value': str(exc_value or ''),
+            'error_type': str(exc_type),
+            'error_value': str(exc_value),
         }
         self.dimensions.update(message)
         send_to(self.socket, self.addresses, self.dimensions)
@@ -53,7 +53,7 @@ class Measure(object):
         dimensions.update(message)
         send_to(self.socket, self.addresses, dimensions)
 
-    def send(self, metric, dimensions):
+    def send(self, metric, dimensions=None):
         message = {
             'metric': metric,
             'client': self.client,
