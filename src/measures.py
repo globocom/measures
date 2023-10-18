@@ -69,5 +69,4 @@ def send_to(socket_obj, addresses, dimensions):
         for address in addresses:
             socket_obj.sendto(buf, address)
     except socket.error as serr:
-        logger.error('Error on sendto. [Errno {} - {}]'.format(serr.errno, serr.strerror))
-
+        logger.error(f'Error on sendto. [Errno {serr.errno} - {serr.strerror}]')
