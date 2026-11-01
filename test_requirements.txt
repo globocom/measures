@@ -3,6 +3,6 @@ nose==1.3
 nose-focus==0.1.1
 pep8==1.5
 mock==1.0
-pylint==1.3
+pylint==4.0.9
 yanc==0.2.4
 ipdb==0.8

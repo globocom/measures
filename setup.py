@@ -26,5 +26,5 @@ setup(name="measures",
       include_package_data=True,
       zip_safe=True,
       install_requires=[],
-      tests_require=["coverage==3.6", "nose==1.2.1", "pep8==1.4.1", "mock==1.0.1", "pylint==1.0.0"],
+      tests_require=["coverage==3.6", "nose==1.2.1", "pep8==1.4.1", "mock==1.0.1", "pylint==4.0.9"],
 )
